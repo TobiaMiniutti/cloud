@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>tobia.cloud | Area Clienti</title>
+  <meta name="description" content="Area riservata tobia.cloud: consegna professionale file, progetti e materiali clienti con accesso protetto." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="favicon.png" type="image/png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --carbon: #121212;
+      --carbon-deep: #0d0d0d;
+      --surface: #141414;
+
+      --golden: #c9a74c;
+      --golden-soft: rgba(201, 167, 76, 0.18);
+
+      --anthracite: #b3b3b3;
+      --white: #ffffff;
+
+      --line: rgba(255, 255, 255, 0.10);
+      --line-strong: rgba(255, 255, 255, 0.20);
+
+      --shadow-xl: 0 14px 44px rgba(0, 0, 0, 0.45);
+      --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.35);
+
+      --radius-xl: 20px;
+      --radius-lg: 14px;
+
+      --transition: 0.28s ease;
+      --container: 1140px;
+      --header-h: 78px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background:
+        radial-gradient(1200px 700px at 80% -10%, rgba(201,167,76,0.08), transparent 60%),
+        radial-gradient(800px 500px at -10% 30%, rgba(201,167,76,0.05), transparent 60%),
+        var(--carbon);
+      color: var(--white);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* Accessibility */
+    .skip-link{
+      position:absolute; left:-999px; top:10px;
+      background: var(--white); color:#000;
+      padding:10px 14px; border-radius: 10px;
+      z-index: 9999; font-weight: 700;
+    }
+    .skip-link:focus { left: 10px; }
+
+    /* Progress bar */
+    .scroll-progress{
+      position: fixed;
+      top:0; left:0;
+      width:0%;
+      height:2px;
+      z-index: 1300;
+      background: linear-gradient(90deg, rgba(201,167,76,0.9), rgba(201,167,76,0.35));
+      box-shadow: 0 0 12px rgba(201,167,76,0.55);
+    }
+
+    header{
+      height: var(--header-h);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: rgba(12, 12, 12, 0.58);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 2rem;
+      display:flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top:0;
+      z-index: 1200;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+    }
+
+    .brand{
+      display:flex; align-items:center; gap: 0.75rem;
+      text-decoration:none; color: var(--white);
+    }
+    .logo{
+      height: 40px; width: auto;
+      user-select:none;
+      filter: drop-shadow(0 0 1.5px rgba(0,0,0,0.6));
+    }
+    .brand-name{
+      display:flex; flex-direction: column; line-height: 1.05;
+    }
+    .brand-name strong{ font-size: 0.98rem; letter-spacing: 0.2px; }
+    .brand-name span{ font-size: 0.82rem; color: var(--anthracite); }
+
+    nav{
+      display:flex;
+      align-items:center;
+      gap: 1.8rem;
+    }
+
+    nav a{
+      position: relative;
+      color: var(--white);
+      text-decoration:none;
+      font-weight: 600;
+      font-size: 0.98rem;
+      padding-bottom: 6px;
+      transition: color var(--transition);
+      outline:none;
+      white-space: nowrap;
+    }
+
+    nav a::after{
+      content:"";
+      position:absolute;
+      left:0;
+      bottom:0;
+      width:0;
+      height:3px;
+      border-radius: 3px 3px 0 0;
+      background: linear-gradient(90deg, #008C45, #F4F5F0, #CD212A);
+      transition: width var(--transition);
+    }
+
+    nav a[aria-current="page"]{ color: var(--white); }
+    nav a[aria-current="page"]::after{ width: 100%; }
+
+    nav a:hover,
+    nav a:focus-visible{ color: var(--golden); }
+
+    nav a:hover::after,
+    nav a:focus-visible::after{ width: 100%; }
+
+    @supports selector(nav:has(a:hover)) {
+      nav:has(a:hover:not([aria-current="page"])) a[aria-current="page"]::after,
+      nav:has(a:focus-visible:not([aria-current="page"])) a[aria-current="page"]::after{
+        width: 0;
+      }
+    }
+
+    /* Generic */
+    a:focus-visible{
+      outline: 2px solid rgba(201, 167, 76, 0.65);
+      outline-offset: 3px;
+      border-radius: 10px;
+    }
+
+    .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .fade-up{
+      opacity:0;
+      transform: translateY(24px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .fade-up.visible{
+      opacity:1;
+      transform: translateY(0);
+    }
+
+    .btn-golden{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      padding: 0.85rem 1.9rem;
+      border: 2px solid var(--golden);
+      border-radius: 999px;
+      color: var(--golden);
+      text-decoration:none;
+      font-weight: 650;
+      transition: transform var(--transition), box-shadow var(--transition),
+                  background var(--transition), color var(--transition);
+      will-change: transform;
+    }
+    .btn-golden:hover,
+    .btn-golden:focus-visible{
+      transform: translateY(-2px);
+      background: var(--golden);
+      color: var(--carbon);
+      box-shadow: 0 10px 24px rgba(201, 167, 76, 0.38);
+      outline:none;
+    }
+
+    .btn-ghost{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      padding: 0.85rem 1.5rem;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      color: var(--white);
+      text-decoration:none;
+      font-weight: 600;
+      background: rgba(255,255,255,0.03);
+      transition: transform var(--transition), border-color var(--transition),
+                  background var(--transition);
+    }
+    .btn-ghost:hover,
+    .btn-ghost:focus-visible{
+      transform: translateY(-2px);
+      border-color: rgba(201,167,76,0.45);
+      background: rgba(255,255,255,0.05);
+      outline:none;
+    }
+
+    /* HERO */
+    .hero{
+      position: relative;
+      min-height: calc(92vh - var(--header-h));
+      display:grid;
+      place-items: center;
+      padding: 2.2rem;
+      overflow:hidden;
+      isolation: isolate;
+      text-align:center;
+      background:
+        radial-gradient(700px 300px at 50% 10%, rgba(201,167,76,0.10), transparent 60%),
+        radial-gradient(900px 420px at 30% 120%, rgba(201,167,76,0.08), transparent 60%),
+        linear-gradient(to bottom, rgba(0,0,0,0.20), rgba(0,0,0,0.62));
+    }
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(520px 260px at 50% 95%, rgba(201,167,76,0.18), transparent 65%);
+      z-index:-1;
+      pointer-events:none;
+    }
+
+    .hero-content{
+      max-width: 880px;
+      opacity:0;
+      transform: translateY(24px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+    .hero-content.visible{
+      opacity:1;
+      transform: translateY(0);
+    }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(201,167,76,0.28);
+      background: rgba(255,255,255,0.02);
+      color: var(--anthracite);
+      font-weight: 600;
+      font-size: 0.92rem;
+      margin-bottom: 1rem;
+    }
+    .k-dot{
+      width: 8px; height: 8px;
+      border-radius: 999px;
+      background: rgba(201,167,76,0.92);
+      box-shadow: 0 0 16px rgba(201,167,76,0.32);
+    }
+
+    .hero h1{
+      font-size: clamp(2.1rem, 5vw, 3.25rem);
+      color: var(--golden);
+      letter-spacing: 0.2px;
+      margin-bottom: 0.85rem;
+      line-height: 1.12;
+    }
+    .hero p{
+      font-size: clamp(1rem, 2.4vw, 1.18rem);
+      color: var(--anthracite);
+      margin: 0 auto 1.75rem;
+      max-width: 70ch;
+      line-height: 1.75;
+    }
+    .hero-actions{
+      display:flex;
+      flex-wrap: wrap;
+      justify-content:center;
+      gap: 0.85rem;
+    }
+
+    /* MAIN */
+    main{
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 5.1rem 2rem 5.8rem;
+    }
+    main > section{
+      margin-bottom: 4.6rem;
+      scroll-margin-top: calc(var(--header-h) + 24px);
+      content-visibility: auto;
+      contain-intrinsic-size: 720px;
+    }
+
+    .section-title{
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      color: var(--golden);
+      text-align:center;
+      margin-bottom: 1.8rem;
+      line-height: 1.2;
+    }
+    .section-sub{
+      text-align:center;
+      color: var(--anthracite);
+      max-width: 78ch;
+      margin: -0.6rem auto 2.1rem;
+      line-height: 1.75;
+    }
+
+    /* VALUE GRID */
+    .value{
+      padding: 2.6rem;
+    }
+    .value-grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.4rem;
+    }
+    .value-card{
+      border: 1px solid rgba(201, 167, 76, 0.24);
+      border-radius: var(--radius-lg);
+      padding: 1.15rem 1.1rem 1.05rem;
+      background: rgba(255,255,255,0.015);
+      transition: transform var(--transition), border-color var(--transition),
+                  background var(--transition), box-shadow var(--transition);
+      min-height: 150px;
+    }
+    .value-card:hover{
+      transform: translateY(-3px);
+      border-color: rgba(201, 167, 76, 0.42);
+      background: rgba(255,255,255,0.03);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.28), 0 0 0 1px rgba(201,167,76,0.08) inset;
+    }
+    .value-card h3{
+      font-size: 1.05rem;
+      margin-bottom: 0.55rem;
+      color: var(--white);
+      line-height: 1.3;
+      display:flex; align-items:center; gap: 10px;
+    }
+    .icon{
+      width: 34px; height: 34px;
+      border-radius: 12px;
+      display:grid; place-items:center;
+      border: 1px solid rgba(201,167,76,0.26);
+      background: radial-gradient(220px 140px at 30% 20%, rgba(201,167,76,0.10), transparent 55%),
+                  rgba(255,255,255,0.02);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+      flex: 0 0 auto;
+    }
+    .value-card p{
+      color: var(--anthracite);
+      line-height: 1.7;
+      font-size: 0.97rem;
+    }
+
+    /* HOW IT WORKS */
+    .how{
+      padding: 2.6rem;
+    }
+    .steps{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.4rem;
+    }
+    .step{
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.012);
+      padding: 1.15rem 1.1rem 1.1rem;
+      position: relative;
+      overflow:hidden;
+      transition: transform var(--transition), border-color var(--transition);
+      min-height: 150px;
+    }
+    .step:hover{
+      transform: translateY(-3px);
+      border-color: rgba(201,167,76,0.30);
+    }
+    .step::before{
+      content:"";
+      position:absolute;
+      inset: -1px;
+      background: radial-gradient(480px 220px at 20% 0%, rgba(201,167,76,0.10), transparent 55%);
+      opacity: 0.8;
+      pointer-events:none;
+    }
+    .step > * { position: relative; z-index: 1; }
+
+    .step-num{
+      width: 34px; height: 34px;
+      border-radius: 999px;
+      display:grid; place-items:center;
+      border: 1px solid rgba(201,167,76,0.35);
+      color: var(--golden);
+      font-weight: 800;
+      margin-bottom: 0.7rem;
+      background: rgba(0,0,0,0.25);
+    }
+    .step h3{
+      color: var(--white);
+      font-size: 1.05rem;
+      margin-bottom: 0.45rem;
+      line-height: 1.3;
+    }
+    .step p{
+      color: var(--anthracite);
+      line-height: 1.7;
+      font-size: 0.97rem;
+    }
+
+    /* SECURITY */
+    .security{
+      padding: 2.6rem;
+      display:flex;
+      flex-wrap: wrap;
+      gap: 1.4rem;
+      align-items: stretch;
+    }
+    .security-left{
+      flex: 1 1 420px;
+      min-width: 280px;
+    }
+    .security-right{
+      flex: 0 0 360px;
+      max-width: 100%;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(255,255,255,0.10);
+      background:
+        radial-gradient(420px 240px at 70% 10%, rgba(201,167,76,0.12), transparent 60%),
+        rgba(255,255,255,0.02);
+      padding: 1.4rem;
+      box-shadow: var(--shadow-lg);
+    }
+    .security h2{
+      color: var(--golden);
+      font-size: clamp(1.6rem, 2.7vw, 2rem);
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+    .security p{
+      color: var(--anthracite);
+      line-height: 1.75;
+      margin-bottom: 1rem;
+      max-width: 72ch;
+    }
+    .bullets{
+      display:grid;
+      gap: 0.65rem;
+      margin-top: 1rem;
+    }
+    .bullet{
+      display:flex;
+      gap: 0.65rem;
+      align-items:flex-start;
+      color: var(--anthracite);
+      line-height: 1.6;
+      font-size: 0.97rem;
+    }
+    .check{
+      width: 18px; height: 18px;
+      border-radius: 6px;
+      border: 1px solid rgba(201,167,76,0.35);
+      display:grid; place-items:center;
+      color: var(--golden);
+      flex: 0 0 auto;
+      margin-top: 2px;
+      background: rgba(0,0,0,0.18);
+    }
+
+    .mini-cta{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1.2rem;
+    }
+
+    /* FINAL CTA */
+    .contact-cta{
+      text-align:center;
+      padding: 3.1rem 2rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(500px 240px at 50% 0%, rgba(201,167,76,0.08), transparent 70%),
+        linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.35));
+      box-shadow: var(--shadow-lg);
+    }
+    .contact-cta h2{
+      color: var(--golden);
+      margin-bottom: 0.7rem;
+      font-size: clamp(1.6rem, 2.8vw, 2rem);
+      line-height: 1.2;
+    }
+    .contact-cta p{
+      color: var(--anthracite);
+      margin-bottom: 1.55rem;
+      font-size: 1.03rem;
+      line-height: 1.7;
+    }
+
+    /* FOOTER */
+    footer{
+      background: var(--carbon-deep);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 2.6rem 2rem 2rem;
+    }
+    .footer-wrap{
+      max-width: var(--container);
+      margin: 0 auto;
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.8rem;
+    }
+    .footer-col h4{
+      color: var(--golden);
+      margin-bottom: 0.8rem;
+      font-size: 1.03rem;
+    }
+    .footer-col p,
+    .footer-col li,
+    .footer-col a{
+      color: var(--anthracite);
+      text-decoration:none;
+      line-height: 1.7;
+      font-size: 0.98rem;
+    }
+    .footer-col ul{ list-style:none; }
+    .footer-col a:hover,
+    .footer-col a:focus-visible{ color: var(--white); outline:none; }
+
+    .footer-bottom{
+      max-width: var(--container);
+      margin: 1.8rem auto 0;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top: 1rem;
+      text-align:center;
+      color: var(--anthracite);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 1020px){
+      .value-grid{ grid-template-columns: 1fr; }
+      .steps{ grid-template-columns: 1fr; }
+      .security-right{ flex: 1 1 360px; }
+    }
+    @media (max-width: 920px){
+      header{ padding: 0 1rem; }
+      nav{ gap: 1rem; }
+      main{ padding: 4rem 1rem 4.8rem; }
+      .value, .how, .security{ padding: 1.6rem; }
+      .brand-name span{ display:none; }
+    }
+    @media (max-width: 640px){
+      :root{ --header-h: 72px; }
+      nav a{ font-size: 0.92rem; }
+      .hero{ min-height: calc(88vh - var(--header-h)); }
+      .contact-cta{ padding: 2.2rem 1.2rem; }
+    }
+
+    /* Motion safety */
+    @media (prefers-reduced-motion: reduce){
+      html{ scroll-behavior: auto; }
+      *, *::before, *::after{
+        animation:none !important;
+        transition:none !important;
+      }
+      .fade-up, .hero-content{
+        opacity: 1 !important;
+        transform:none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#contenuto">Salta al contenuto</a>
+  <div class="scroll-progress" aria-hidden="true"></div>
+
+  <header>
+    <a class="brand" href="https://tobia.me" aria-label="Vai a tobia.me">
+      <img src="favicon.png" alt="Logo Tobia" class="logo" />
+      <div class="brand-name" aria-hidden="true">
+        <strong>tobia.cloud</strong>
+        <span>Area Clienti</span>
+      </div>
+    </a>
+
+    <nav aria-label="Navigazione principale">
+      <a href="https://tobia.me">Home</a>
+      <a href="https://tobia.me/portfolio">Portfolio</a>
+      <a href="#accesso" aria-current="page">Area Clienti</a>
+      <a href="https://tobia.me/contatti">Contatti</a>
+    </nav>
+  </header>
+
+  <section class="hero" aria-label="Presentazione">
+    <div class="hero-content fade-up">
+      <div class="kicker" aria-label="Stato servizio">
+        <span class="k-dot" aria-hidden="true"></span>
+        Private Access • Consegna professionale
+      </div>
+
+      <h1>Consegna file professionale.<br>Accesso riservato.</h1>
+
+      <p>
+        <strong>tobia.cloud</strong> è l’area dedicata ai clienti per scaricare progetti, export finali e
+        materiali di consegna tramite link protetti, password e scadenza.
+      </p>
+
+      <div class="hero-actions" id="accesso">
+        <!-- TODO: sostituisci questo href con la tua pagina di accesso o link Aruba/Drive -->
+        <a class="btn-golden" href="https://tobia.cloud/accesso" aria-label="Accedi alla tua cartella">
+          Accedi alla tua cartella
+          <span aria-hidden="true">→</span>
+        </a>
+
+        <!-- TODO: sostituisci con contatto o form -->
+        <a class="btn-ghost" href="https://tobia.me/contatti" aria-label="Richiedi accesso">
+          Richiedi accesso
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <main id="contenuto">
+    <section class="panel value fade-up" aria-labelledby="value-title">
+      <h2 id="value-title" class="section-title">Perché tobia.cloud</h2>
+      <p class="section-sub">
+        Un’esperienza pulita, ordinata e sicura: pensata per consegne rapide e senza frizioni,
+        con un livello “enterprise” coerente col brand.
+      </p>
+
+      <div class="value-grid" role="list">
+        <article class="value-card" role="listitem">
+          <h3>
+            <span class="icon" aria-hidden="true">🔐</span>
+            Accesso protetto
+          </h3>
+          <p>Link privati con <strong>password</strong> e <strong>scadenza</strong>. Ideale per consegne controllate e senza dispersioni.</p>
+        </article>
+
+        <article class="value-card" role="listitem">
+          <h3>
+            <span class="icon" aria-hidden="true">⚡</span>
+            Download veloce
+          </h3>
+          <p>File pronti per essere scaricati subito, con struttura chiara e materiali separati per versione.</p>
+        </article>
+
+        <article class="value-card" role="listitem">
+          <h3>
+            <span class="icon" aria-hidden="true">📦</span>
+            Organizzazione professionale
+          </h3>
+          <p>Cartelle dedicate: <strong>Export finali</strong>, <strong>Originali</strong>, <strong>Anteprime</strong>, <strong>Extra</strong>. Tutto al posto giusto.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel how fade-up" aria-labelledby="how-title">
+      <h2 id="how-title" class="section-title">Come funziona</h2>
+      <p class="section-sub">Tre step, zero casino. Ti arriva tutto già pronto e spiegato.</p>
+
+      <div class="steps" role="list">
+        <article class="step" role="listitem">
+          <div class="step-num" aria-hidden="true">1</div>
+          <h3>Ricevi il link</h3>
+          <p>Ti invio via email un link riservato alla tua cartella, con le informazioni essenziali per l’accesso.</p>
+        </article>
+
+        <article class="step" role="listitem">
+          <div class="step-num" aria-hidden="true">2</div>
+          <h3>Inserisci la password</h3>
+          <p>La password è separata e dedicata. Se il link scade, te ne invio uno nuovo in modo controllato.</p>
+        </article>
+
+        <article class="step" role="listitem">
+          <div class="step-num" aria-hidden="true">3</div>
+          <h3>Scarica i file</h3>
+          <p>Download immediato di export finali e materiali. Se serve, posso caricare aggiornamenti nello stesso flusso.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel security fade-up" aria-labelledby="sec-title">
+      <div class="security-left">
+        <h2 id="sec-title">Sicurezza & trasparenza</h2>
+        <p>
+          Questa area è progettata per offrire consegne affidabili con un’impostazione pulita:
+          link privati, accesso controllato e riferimenti chiari alle pagine legali.
+        </p>
+
+        <div class="bullets" role="list">
+          <div class="bullet" role="listitem">
+            <div class="check" aria-hidden="true">✓</div>
+            Trasmissione cifrata (HTTPS) e accesso tramite link riservati
+          </div>
+          <div class="bullet" role="listitem">
+            <div class="check" aria-hidden="true">✓</div>
+            Scadenza link e gestione consegne “a controllo”
+          </div>
+          <div class="bullet" role="listitem">
+            <div class="check" aria-hidden="true">✓</div>
+            Materiale organizzato per ridurre errori e fraintendimenti
+          </div>
+        </div>
+
+        <div class="mini-cta">
+          <!-- TODO: cambia verso le tue pagine reali -->
+          <a class="btn-ghost" href="https://tobia.me/privacy.html">Privacy</a>
+          <a class="btn-ghost" href="https://tobia.me/cookie.html">Cookie</a>
+          <a class="btn-ghost" href="https://tobia.me/termini.html">Termini</a>
+        </div>
+      </div>
+
+      <aside class="security-right" aria-label="Info rapide">
+        <h3 style="color: var(--golden); font-size: 1.15rem; margin-bottom: 0.6rem; line-height: 1.2;">
+          Nota rapida
+        </h3>
+        <p style="color: var(--anthracite); line-height: 1.75; margin-bottom: 0.9rem;">
+          Se non trovi più il link o la password, scrivimi: rigenero l’accesso in modo sicuro.
+        </p>
+
+        <a class="btn-golden" href="https://tobia.me/contatti" style="width:100%; justify-content:center;">
+          Contattami
+          <span aria-hidden="true">→</span>
+        </a>
+
+        <p style="color: rgba(179,179,179,0.85); font-size: 0.9rem; margin-top: 0.85rem; line-height: 1.6;">
+          Suggerimento: scarica da Wi-Fi stabile per file pesanti (originali / progetti).
+        </p>
+      </aside>
+    </section>
+
+    <section class="contact-cta fade-up" aria-labelledby="cta-title">
+      <h2 id="cta-title">Hai bisogno di una nuova consegna?</h2>
+      <p>Nuova versione, aggiornamenti, extra file o consegna “pulita” per un cliente finale: gestiamola in modo ordinato.</p>
+      <a href="https://tobia.me/contatti" class="btn-golden">Richiedi aggiornamento</a>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-wrap">
+      <div class="footer-col">
+        <h4>tobia.cloud</h4>
+        <p>Area riservata per consegna professionale di file e materiali di progetto.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Link rapidi</h4>
+        <ul>
+          <li><a href="https://tobia.me">Home</a></li>
+          <li><a href="https://tobia.me/portfolio">Portfolio</a></li>
+          <li><a href="#accesso">Area Clienti</a></li>
+          <li><a href="https://tobia.me/contatti">Contatti</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Legale</h4>
+        <ul>
+          <li><a href="https://tobia.me/privacy.html">Privacy Policy</a></li>
+          <li><a href="https://tobia.me/cookie.html">Cookie Policy</a></li>
+          <li><a href="https://tobia.me/termini.html">Termini e Condizioni</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">© <span id="year"></span> tobia.cloud — Tutti i diritti riservati</div>
+  </footer>
+
+  <script>
+    // Reveal on scroll
+    const faders = document.querySelectorAll('.fade-up, .hero-content');
+    const revealObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('visible');
+        obs.unobserve(entry.target);
+      });
+    }, { threshold: 0.16, rootMargin: "0px 0px -40px 0px" });
+
+    faders.forEach((el, i) => {
+      el.style.transitionDelay = `${Math.min(i * 45, 220)}ms`;
+      revealObserver.observe(el);
+    });
+
+    // Scroll progress
+    const progress = document.querySelector('.scroll-progress');
+    const updateProgress = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progress.style.width = pct + '%';
+    };
+    updateProgress();
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress);
+
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
